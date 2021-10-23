@@ -211,6 +211,23 @@ public:
     }
     void update(int row, int col, int value)
     {
+        if(this->row < row || row <= 0 || this->column < col || col <= 0)
+            return;
+        if(headRow[--row]->location.second == col)
+        {
+            headRow[row]->value = value;
+            return;
+        }
+        node *tmp = headRow[row];
+        while(tmp != nullptr)
+        {
+            if(tmp->location.second == col)
+            {
+                tmp->value = value;
+                return;
+            }
+            tmp = tmp->nextRow;
+        }
     }
     void print(bool type)
     {
