@@ -276,6 +276,48 @@ public:
     }
     void save_file(string &file)
     {
+        try
+        {
+            FILE *fptr;
+            fptr = fopen(file.c_str(), "w");
+            if (fptr == NULL)
+                throw "Error!!! title.ratings.txt could not be opened";
+            for(int i = 0 ; i < row; i++)
+            {
+                node *tmp = headRow[i];
+                string sent = "";
+                bool flag = false;
+                for(int j = 0; j < column; j++)
+                {
+                    if(headRow[i] == nullptr || !(tmp != nullptr && tmp->location.second == j + 1))
+                    {
+                        if(flag)
+                            sent += ',';
+                        else
+                            flag= true;
+                        sent += '0';
+                    }
+                    else
+                    {
+                        if(flag)
+                            sent += ',';
+                        else
+                            flag= true;
+                        sent += to_string(tmp->value);
+                        tmp = tmp->nextRow;
+                    }
+                }
+                sent += '\n';
+                fputs(sent.c_str(), fptr);
+            }
+            fclose(fptr);
+        }
+        catch (char const *message)
+        {
+            cout << message << endl;
+            pause;
+            exit(1);
+        }
     }
 };
 
