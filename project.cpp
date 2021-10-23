@@ -192,6 +192,22 @@ public:
     }
     void search(int value)
     {
+        if(!value)
+            cout << "The number zero is present in many cells." << endl;
+        for(int i = 0; i < row; i++)
+        {
+            node *tmp = headRow[i];
+            while(tmp != nullptr)
+            {
+                if(tmp->value == value)
+                {
+                    cout << "The number " << value << " is in cell (" << tmp->location.first << ", " << tmp->location.second << ")." << endl;
+                    return;
+                }
+                tmp = tmp->nextRow;
+            }
+        }
+        cout << "Not cell found with this value." << endl;
     }
     void update(int row, int col, int value)
     {
