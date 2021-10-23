@@ -71,6 +71,18 @@ public:
     }
     ~matrix()
     {
+        for(int i = 0; i < row; i++)
+        {
+            node *tmp = headRow[i];
+            while (tmp != nullptr)
+            {
+                node *tp = tmp;
+                tmp = tmp->nextRow;
+                delete tp;
+            }
+        }
+        column = 0;
+        row = 0;
     }
     void insert(int row, int col, int value)
     {
