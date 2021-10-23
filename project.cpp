@@ -151,6 +151,44 @@ public:
     }
     void remove(int row, int col)
     {
+        if(this->row < row || row <= 0 || this->column < col || col <= 0)
+            return;
+        node *tmp = nullptr;
+        if(headRow[row - 1]->location.second == col)
+        {
+            tmp = headRow[row - 1];
+            headRow[row - 1] = headRow[row - 1]->nextRow;
+        }
+        else
+        {
+            node *tmpRow = headRow[row - 1];
+            while(tmpRow->nextRow != nullptr)
+            {
+                if(tmpRow->nextRow->location.second == col)
+                {
+                    tmp = tmpRow->nextRow;
+                    tmpRow->nextRow = tmpRow->nextRow->nextRow;
+                    break;
+                }
+                tmpRow = tmpRow->nextRow;
+            }
+        }
+        if(headColumn[col - 1]->location.first == row)
+            headColumn[col - 1] = headColumn[col - 1]->nextColumn;
+        else
+        {
+            node *tmpColumn = headColumn[col - 1];
+            while(tmpColumn->nextColumn != nullptr)
+            {
+                if(tmpColumn->nextColumn->location.first == row)
+                {
+                    tmpColumn->nextColumn = tmpColumn->nextColumn->nextColumn;
+                    break;
+                }
+                tmpColumn = tmpColumn->nextColumn;
+            }
+        }
+        delete tmp;
     }
     void search(int value)
     {
