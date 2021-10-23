@@ -86,6 +86,68 @@ public:
     }
     void insert(int row, int col, int value)
     {
+        if (row <= 0 || row > this->row || col <= 0 || col > this->column || value == 0)
+            return;
+        node *tmp = new node;
+        tmp->location.first = row--;
+        tmp->location.second = col--;
+        tmp->value = value;
+        tmp->nextRow = nullptr;
+        tmp->nextColumn = nullptr;
+        if(headRow[row] == nullptr)
+            headRow[row] = tmp;
+        else
+        {
+            bool flag = true;
+            node *tmpRow = headRow[row];
+            if(headRow[row]->location.second > col + 1)
+            {
+                tmp->nextRow = headRow[row];
+                headRow[row] = tmp;
+            }
+            else
+            {
+                while (tmpRow->nextRow != nullptr)
+                {
+                    if(tmpRow->location.first < row && tmpRow->nextRow->location.first > row)
+                    {
+                        tmp->nextRow = tmpRow->nextRow;
+                        tmpRow->nextRow = tmp;
+                        flag = false;
+                    }
+                    tmpRow = tmpRow->nextRow;
+                }
+                if(flag)
+                    tmpRow->nextRow = tmp;
+            }
+        }
+        if (headColumn[col] == nullptr)
+            headColumn[col] = tmp;
+        else
+        {
+            bool flag = true;
+            node *tmpColumn = headColumn[col];
+            if(headColumn[col]->location.first > row + 1)
+            {
+                tmp->nextColumn = headColumn[col];
+                headColumn[col] = tmp;
+            }
+            else
+            {
+                while(tmpColumn->nextColumn != nullptr)
+                {
+                    if(tmpColumn->location.second < col && tmpColumn->nextColumn->location.second > col)
+                    {
+                        tmp->nextColumn = tmpColumn->nextColumn;
+                        tmpColumn->nextColumn = tmp;
+                        flag = false;
+                    }
+                    tmpColumn = tmpColumn->nextColumn;
+                }
+                if(flag)
+                    tmpColumn->nextColumn = tmp;
+            }
+        }
     }
     void remove(int row, int col)
     {
