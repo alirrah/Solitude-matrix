@@ -231,6 +231,48 @@ public:
     }
     void print(bool type)
     {
+        if(type)
+        {
+            for(int i = 0; i < row; i++)
+            {
+                if(headRow[i] != nullptr)
+                {
+                    node *tmp = headRow[i];
+                    while (tmp != nullptr)
+                    {
+                        cout << tmp->location.first << ' ' << tmp->location.second << ' ' << tmp->value << endl;
+                        tmp = tmp->nextRow;
+                    }
+                }
+            }
+            return;
+        }
+        for(int i = 0 ; i < row; i++)
+        {
+            node *tmp = headRow[i];
+            bool flag = false;
+            for(int j = 0; j < column; j++)
+            {
+                if(headRow[i] == nullptr || !(tmp != nullptr && tmp->location.second == j + 1))
+                {
+                    if(flag)
+                        cout << ',';
+                    else
+                        flag = true;
+                    cout << 0;
+                }
+                else
+                {
+                    if(flag)
+                        cout << ',';
+                    else
+                        flag = true;
+                    cout << tmp->value;
+                    tmp = tmp->nextRow;
+                }
+            }
+            cout << endl;
+        }
     }
     void save_file(string &file)
     {
