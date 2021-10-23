@@ -4,6 +4,7 @@
 using namespace std;
 
 #define pause system("pause")
+#define clean system("cls")
 
 int findNumber(string &, int &);
 
@@ -321,8 +322,15 @@ public:
     }
 };
 
+bool menu(matrix &, string &);
+
 int main()
 {
+    string file;
+    cout << "Enter the file address with the name" << endl;
+    getline(cin, file);
+    matrix Matrix(file);
+    while (menu(Matrix, file));
     return 0;
 }
 
@@ -333,4 +341,70 @@ int findNumber(string &sentence, int &j)
         if(!isdigit(sentence[j]))
             break;
     return stoi(sentence.substr(i, j));
+}
+
+bool menu(matrix &Matrix, string &file)
+{
+    try
+    {
+        clean;
+        int number, row, column, value;
+        cout << "Menu : \n\t(0) Insert\n\t(1) Delete\n\t(2) Search\n\t(3) Update\n\t(4) Print\n\t(5) Save in File\n\t(6) Quit\n\nEnter a number : ";
+        cin >> number;
+        switch (number)
+        {
+        case 0:
+            cout << "\nRow : ";
+            cin >> row;
+            cout << "Column : ";
+            cin >> column;
+            cout << "Value : ";
+            cin >> value;
+            Matrix.insert(row, column, value);
+            break;
+        case 1:
+            cout << "\nRow : ";
+            cin >> row;
+            cout << "Column : ";
+            cin >> column;
+            Matrix.remove(row, column);
+            break;
+        case 2:
+            cout << "\nValue : ";
+            cin >> value;
+            Matrix.search(value);
+            break;
+        case 3:
+            cout << "\nRow : ";
+            cin >> row;
+            cout << "Column : ";
+            cin >> column;
+            cout << "Value : ";
+            cin >> value;
+            Matrix.update(row, column, value);
+            break;
+        case 4:
+            cout << "\n(0) Full view\n(1)Compact view\nEnter a number : ";
+            cin >> value;
+            if (value != 0 && value != 1)
+                throw "\n\nError!!! You enter a number out of range";
+            Matrix.print(value);
+            break;
+        case 5:
+            Matrix.save_file(file);
+            break;
+        case 6:
+            return false;
+        default:
+            throw "The number is out of range";
+        }
+        pause;
+        return true;
+    }
+    catch (char const *message)
+    {
+        cout << message << endl;
+        pause;
+        return true;
+    }
 }
