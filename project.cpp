@@ -1,10 +1,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <climits>
 using namespace std;
 
 #define pause system("pause")
 #define clean system("cls")
+#define input_validation while (cin.fail()){cin.clear();cin.ignore(INT_MAX, '\n');throw "\n\nError!!! You can only enter a number";}
 
 int findNumber(string &, int &);
 
@@ -20,6 +22,17 @@ private:
     };
     vector<node *> headColumn, headRow;
     int row, column;
+    bool isIn(int row, int col)
+    {
+        node *tmp = headRow[row - 1];
+        while(tmp != nullptr)
+        {
+            if(tmp->location.first == row && tmp->location.second == col)
+                return true;
+            tmp = tmp->nextRow;
+        }
+        return false;
+    }
 public:
     matrix(string &file)
     {
@@ -43,23 +56,19 @@ public:
             headColumn.resize(column);
             i = 1;
             j = 1;
-            while((fileSentence = fgetc(fptr)) != EOF)
+            do
             {
-                if(isdigit(fileSentence))
-                    sent += fileSentence;
-                else if(fileSentence == ',' || fileSentence == '\n')
+                int num;
+                fscanf(fptr, "%d,", &num);
+                insert(i, j, num);
+                j++;
+                if(j > column)
                 {
-                    insert(i, j, stoi(sent));
-                    sent.clear();
-                    j++;
-                    if(j > column)
-                    {
-                        j = 1;
-                        i++;
-                    }
+                    j = 1;
+                    i++;
                 }
 
-            }
+            }while(!(feof(fptr)));
             fclose(fptr);
         }
         catch (char const *message)
@@ -87,7 +96,7 @@ public:
     }
     void insert(int row, int col, int value)
     {
-        if (row <= 0 || row > this->row || col <= 0 || col > this->column || value == 0)
+        if (row <= 0 || row > this->row || col <= 0 || col > this->column || value == 0 || isIn(row, col))
             return;
         node *tmp = new node;
         tmp->location.first = row--;
@@ -152,7 +161,7 @@ public:
     }
     void remove(int row, int col)
     {
-        if(this->row < row || row <= 0 || this->column < col || col <= 0)
+        if(this->row < row || row <= 0 || this->column < col || col <= 0 || !isIn(row, col))
             return;
         node *tmp = nullptr;
         if(headRow[row - 1]->location.second == col)
@@ -212,7 +221,7 @@ public:
     }
     void update(int row, int col, int value)
     {
-        if(this->row < row || row <= 0 || this->column < col || col <= 0)
+        if(this->row < row || row <= 0 || this->column < col || col <= 0 || !isIn(row, col))
             return;
         if(headRow[--row]->location.second == col)
         {
@@ -351,41 +360,52 @@ bool menu(matrix &Matrix, string &file)
         int number, row, column, value;
         cout << "Menu : \n\t(0) Insert\n\t(1) Delete\n\t(2) Search\n\t(3) Update\n\t(4) Print\n\t(5) Save in File\n\t(6) Quit\n\nEnter a number : ";
         cin >> number;
+        input_validation
         switch (number)
         {
         case 0:
             cout << "\nRow : ";
             cin >> row;
+            input_validation
             cout << "Column : ";
             cin >> column;
+            input_validation
             cout << "Value : ";
             cin >> value;
+            input_validation
             Matrix.insert(row, column, value);
             break;
         case 1:
             cout << "\nRow : ";
             cin >> row;
+            input_validation
             cout << "Column : ";
             cin >> column;
+            input_validation
             Matrix.remove(row, column);
             break;
         case 2:
             cout << "\nValue : ";
             cin >> value;
+            input_validation
             Matrix.search(value);
             break;
         case 3:
             cout << "\nRow : ";
             cin >> row;
+            input_validation
             cout << "Column : ";
             cin >> column;
+            input_validation
             cout << "Value : ";
             cin >> value;
+            input_validation
             Matrix.update(row, column, value);
             break;
         case 4:
             cout << "\n(0) Full view\n(1)Compact view\nEnter a number : ";
             cin >> value;
+            input_validation
             if (value != 0 && value != 1)
                 throw "\n\nError!!! You enter a number out of range";
             Matrix.print(value);
@@ -396,7 +416,7 @@ bool menu(matrix &Matrix, string &file)
         case 6:
             return false;
         default:
-            throw "The number is out of range";
+            throw "\n\nThe number is out of range";
         }
         pause;
         return true;
